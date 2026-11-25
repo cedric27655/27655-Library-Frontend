@@ -1,0 +1,37 @@
+meta {
+  name: Create Patient
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/patient
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "firstName": "Patrick",
+    "lastName": "Habimana",
+    "dateOfBirth": "1992-06-14"
+  }
+}
+
+tests {
+  test("status is 201 Created", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("patient created with id", function() {
+    const data = res.getBody();
+    expect(data.id).to.be.a('string');
+    expect(data.firstName).to.equal("Patrick");
+    bru.setEnvVar("patientId", data.id);
+    bru.setVar("patientId", data.id);
+  });
+}

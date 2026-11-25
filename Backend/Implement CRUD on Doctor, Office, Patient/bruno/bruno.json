@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Clinic Management API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

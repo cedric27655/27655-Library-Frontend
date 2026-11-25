@@ -1,0 +1,17 @@
+meta {
+  name: Verify Doctor Deleted
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/doctor/{{doctorId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 404 Not Found", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+}

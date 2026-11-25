@@ -1,0 +1,22 @@
+meta {
+  name: Remove Specialization From Doctor
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/api/doctor/{{doctorId}}/specialization/{{specializationId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("doctor updated without specialization", function() {
+    const data = res.getBody();
+    expect(data.specializations).to.be.an('array');
+  });
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Duplicate Office Number Conflict
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/office
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Duplicate Room",
+    "officeNumber": 111
+  }
+}
+
+tests {
+  test("status is 409 Conflict", function() {
+    expect(res.getStatus()).to.equal(409);
+  });
+  
+  test("conflict error message", function() {
+    const data = res.getBody();
+    expect(data.message).to.include("Office number already exists");
+  });
+}

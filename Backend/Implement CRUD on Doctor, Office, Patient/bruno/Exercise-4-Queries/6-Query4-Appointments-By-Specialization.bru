@@ -1,0 +1,26 @@
+meta {
+  name: Query 4 - Appointments By Doctor Specialization
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/appointment/query/by-specialization?name=Cardiology
+  body: none
+  auth: none
+}
+
+params:query {
+  name: Cardiology
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("returns array of appointments across joined relationships", function() {
+    const data = res.getBody();
+    expect(Array.isArray(data)).to.be.true;
+  });
+}

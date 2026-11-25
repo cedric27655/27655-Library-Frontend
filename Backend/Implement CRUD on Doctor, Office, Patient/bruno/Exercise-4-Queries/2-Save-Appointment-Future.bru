@@ -1,0 +1,37 @@
+meta {
+  name: Save Appointment (Future Date PENDING)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/appointment/save
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "appointmentDate": "2026-11-15",
+    "reason": "Upcoming General Review",
+    "status": "PENDING",
+    "patientId": "{{patientId}}",
+    "doctorId": "{{doctorId}}"
+  }
+}
+
+tests {
+  test("status is 201 Created", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("appointment saved successfully", function() {
+    const data = res.getBody();
+    expect(data.success).to.be.true;
+    expect(data.message).to.equal("Appointment is saved successfully");
+  });
+}

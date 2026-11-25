@@ -1,0 +1,22 @@
+meta {
+  name: Get Office By ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/office/{{officeId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("retrieved office matches requested id", function() {
+    const data = res.getBody();
+    expect(data.id).to.equal(bru.getEnvVar("officeId") || bru.getVar("officeId"));
+  });
+}

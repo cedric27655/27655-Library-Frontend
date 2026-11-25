@@ -1,0 +1,41 @@
+meta {
+  name: Save Appointment (Past Date PENDING)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/appointment/save
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "appointmentDate": "2026-09-01",
+    "reason": "Past Routine Consultation",
+    "status": "PENDING",
+    "patientId": "{{patientId}}",
+    "doctorId": "{{doctorId}}"
+  }
+}
+
+tests {
+  test("status is 201 Created", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("appointment saved successfully", function() {
+    const data = res.getBody();
+    expect(data.success).to.be.true;
+    expect(data.message).to.equal("Appointment is saved successfully");
+    if (data.appointmentId) {
+      bru.setEnvVar("appointmentId", data.appointmentId);
+      bru.setVar("appointmentId", data.appointmentId);
+    }
+  });
+}

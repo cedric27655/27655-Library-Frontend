@@ -1,0 +1,22 @@
+meta {
+  name: Get All Specializations
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/specialization
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("returns array of specializations", function() {
+    const data = res.getBody();
+    expect(Array.isArray(data)).to.be.true;
+  });
+}

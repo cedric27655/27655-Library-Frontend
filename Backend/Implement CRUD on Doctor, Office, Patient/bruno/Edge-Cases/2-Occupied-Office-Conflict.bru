@@ -1,0 +1,35 @@
+meta {
+  name: Occupied Office Conflict
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/doctor
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "firstName": "Claudine",
+    "lastName": "Umutoni",
+    "dateOfBirth": "1990-01-15",
+    "officeId": "32ba028e-3186-4c55-bce7-d2ab8cff48a8"
+  }
+}
+
+tests {
+  test("status is 409 Conflict", function() {
+    expect(res.getStatus()).to.equal(409);
+  });
+  
+  test("conflict message contains already assigned", function() {
+    const data = res.getBody();
+    expect(data.message).to.include("already assigned");
+  });
+}

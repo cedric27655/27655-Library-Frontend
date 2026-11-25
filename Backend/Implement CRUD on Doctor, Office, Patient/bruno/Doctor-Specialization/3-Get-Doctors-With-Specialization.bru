@@ -1,0 +1,22 @@
+meta {
+  name: Get Doctors With Specialization
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/specialization/{{specializationId}}/doctors
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("returns array of doctors associated with specialization", function() {
+    const data = res.getBody();
+    expect(Array.isArray(data)).to.be.true;
+  });
+}

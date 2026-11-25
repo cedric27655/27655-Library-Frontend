@@ -1,0 +1,33 @@
+meta {
+  name: Update Office
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/office/{{officeId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Consultation Room B (Renovated)",
+    "officeNumber": 202
+  }
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("updated name matches", function() {
+    const data = res.getBody();
+    expect(data.name).to.equal("Consultation Room B (Renovated)");
+  });
+}

@@ -1,0 +1,1550 @@
+{
+	"info": {
+		"_postman_id": "c1f7b88e-4a62-4e05-9087-c990b7a8d501",
+		"name": "Clinic Management API - Doctor, Office, Patient CRUD",
+		"description": "Complete CRUD API test suite for Kigali Clinic management application covering Office, Doctor, and Patient resources with tests, response validation, and automatic variable chaining.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8085",
+			"type": "string"
+		},
+		{
+			"key": "officeId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "doctorId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "patientId",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Office CRUD",
+			"item": [
+				{
+					"name": "Create Office",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Office object returned with ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.name).to.eql(\"Consultation Room A\");",
+									"    pm.expect(jsonData.officeNumber).to.eql(201);",
+									"    pm.collectionVariables.set(\"officeId\", jsonData.id);",
+									"    pm.environment.set(\"officeId\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Consultation Room A\",\n  \"officeNumber\": 201\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/office",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office"
+							]
+						},
+						"description": "Creates a new Office record."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Offices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"    pm.expect(jsonData.length).to.be.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/office",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office"
+							]
+						},
+						"description": "Retrieves the list of all offices."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Office By ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct office returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var expectedId = pm.collectionVariables.get(\"officeId\") || pm.environment.get(\"officeId\");",
+									"    pm.expect(jsonData.id).to.eql(expectedId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/office/{{officeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office",
+								"{{officeId}}"
+							]
+						},
+						"description": "Retrieves a specific office by its UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Office",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Office fields updated successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"Consultation Suite A Updated\");",
+									"    pm.expect(jsonData.officeNumber).to.eql(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Consultation Suite A Updated\",\n  \"officeNumber\": 201\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/office/{{officeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office",
+								"{{officeId}}"
+							]
+						},
+						"description": "Updates an existing office by its UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Office",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/office/{{officeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office",
+								"{{officeId}}"
+							]
+						},
+						"description": "Deletes an office by its UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Office Deleted (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/office/{{officeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office",
+								"{{officeId}}"
+							]
+						},
+						"description": "Confirms the deleted office no longer exists."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Doctor CRUD",
+			"item": [
+				{
+					"name": "Create Helper Office for Doctor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Helper Office Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    var data = pm.response.json();",
+									"    pm.collectionVariables.set(\"officeId\", data.id);",
+									"    pm.environment.set(\"officeId\", data.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Doctor Primary Office\",\n  \"officeNumber\": 305\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/office",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office"
+							]
+						},
+						"description": "Creates an office to assign to the doctor."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Doctor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Doctor object returned with ID and assigned Office\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.firstName).to.eql(\"Aline\");",
+									"    pm.expect(jsonData.lastName).to.eql(\"Mukamana\");",
+									"    pm.expect(jsonData.dateOfBirth).to.eql(\"1988-04-12\");",
+									"    pm.expect(jsonData.officeId).to.eql(pm.collectionVariables.get(\"officeId\") || pm.environment.get(\"officeId\"));",
+									"    pm.collectionVariables.set(\"doctorId\", jsonData.id);",
+									"    pm.environment.set(\"doctorId\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Aline\",\n  \"lastName\": \"Mukamana\",\n  \"dateOfBirth\": \"1988-04-12\",\n  \"officeId\": \"{{officeId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor"
+							]
+						},
+						"description": "Creates a new Doctor associated with the previously created office."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Doctors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array of doctors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"    pm.expect(jsonData.length).to.be.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor"
+							]
+						},
+						"description": "Retrieves the list of all doctors."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doctor By ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct doctor returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var expectedId = pm.collectionVariables.get(\"doctorId\") || pm.environment.get(\"doctorId\");",
+									"    pm.expect(jsonData.id).to.eql(expectedId);",
+									"    pm.expect(jsonData.firstName).to.eql(\"Aline\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor/{{doctorId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor",
+								"{{doctorId}}"
+							]
+						},
+						"description": "Retrieves a specific doctor by UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Doctor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Doctor details updated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.firstName).to.eql(\"Dr. Aline\");",
+									"    pm.expect(jsonData.lastName).to.eql(\"Mukamana-Kayitesi\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Dr. Aline\",\n  \"lastName\": \"Mukamana-Kayitesi\",\n  \"dateOfBirth\": \"1988-04-12\",\n  \"officeId\": \"{{officeId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor/{{doctorId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor",
+								"{{doctorId}}"
+							]
+						},
+						"description": "Updates doctor information."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Doctor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor/{{doctorId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor",
+								"{{doctorId}}"
+							]
+						},
+						"description": "Deletes the doctor."
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Doctor Deleted (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor/{{doctorId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor",
+								"{{doctorId}}"
+							]
+						},
+						"description": "Verifies doctor is no longer found."
+					},
+					"response": []
+				},
+				{
+					"name": "Clean Up Helper Office",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Helper Office Deleted\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/office/{{officeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office",
+								"{{officeId}}"
+							]
+						},
+						"description": "Deletes the helper office created for the doctor test."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Patient CRUD",
+			"item": [
+				{
+					"name": "Create Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Patient object returned with ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.firstName).to.eql(\"Jean\");",
+									"    pm.expect(jsonData.lastName).to.eql(\"Uwimana\");",
+									"    pm.expect(jsonData.dateOfBirth).to.eql(\"1995-08-20\");",
+									"    pm.collectionVariables.set(\"patientId\", jsonData.id);",
+									"    pm.environment.set(\"patientId\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Jean\",\n  \"lastName\": \"Uwimana\",\n  \"dateOfBirth\": \"1995-08-20\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/patient",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"patient"
+							]
+						},
+						"description": "Creates a new Patient."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Patients",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array of patients\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"    pm.expect(jsonData.length).to.be.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/patient",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"patient"
+							]
+						},
+						"description": "Retrieves the list of all patients."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Patient By ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct patient returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var expectedId = pm.collectionVariables.get(\"patientId\") || pm.environment.get(\"patientId\");",
+									"    pm.expect(jsonData.id).to.eql(expectedId);",
+									"    pm.expect(jsonData.firstName).to.eql(\"Jean\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/patient/{{patientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"patient",
+								"{{patientId}}"
+							]
+						},
+						"description": "Retrieves patient details by UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Patient information updated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.firstName).to.eql(\"Jean-Paul\");",
+									"    pm.expect(jsonData.lastName).to.eql(\"Uwimana\");",
+									"    pm.expect(jsonData.dateOfBirth).to.eql(\"1995-08-20\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Jean-Paul\",\n  \"lastName\": \"Uwimana\",\n  \"dateOfBirth\": \"1995-08-20\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/patient/{{patientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"patient",
+								"{{patientId}}"
+							]
+						},
+						"description": "Updates patient record."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/patient/{{patientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"patient",
+								"{{patientId}}"
+							]
+						},
+						"description": "Deletes the patient."
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Patient Deleted (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/patient/{{patientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"patient",
+								"{{patientId}}"
+							]
+						},
+						"description": "Verifies patient record is removed."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Validation and Conflict Scenarios",
+			"item": [
+				{
+					"name": "Duplicate Office Number (409 Conflict)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409 Conflict\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"pm.test(\"Error message indicates conflict\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.message).to.include(\"Office number already exists\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Duplicate Room\",\n  \"officeNumber\": 111\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/office",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"office"
+							]
+						},
+						"description": "Verifies that submitting an existing office number returns 409 Conflict."
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Already Occupied Office (409 Conflict)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409 Conflict\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"pm.test(\"Error indicates office already assigned\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.message).to.include(\"already assigned\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Claudine\",\n  \"lastName\": \"Umutoni\",\n  \"dateOfBirth\": \"1990-01-15\",\n  \"officeId\": \"32ba028e-3186-4c55-bce7-d2ab8cff48a8\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor"
+							]
+						},
+						"description": "Attempts to assign an office that is already assigned to another doctor."
+					},
+					"response": []
+				},
+				{
+					"name": "Non-existent Office for Doctor (404 Not Found)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Eric\",\n  \"lastName\": \"Manzi\",\n  \"dateOfBirth\": \"1985-05-10\",\n  \"officeId\": \"00000000-0000-0000-0000-000000000000\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor"
+							]
+						},
+						"description": "Attempts to assign a nonexistent officeId to a doctor."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Specialization CRUD",
+			"item": [
+				{
+					"name": "Create Specialization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.have.property('id');",
+									"pm.expect(data.name).to.eql(\"Cardiology\");",
+									"pm.collectionVariables.set(\"specializationId\", data.id);",
+									"pm.environment.set(\"specializationId\", data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Cardiology\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/specialization",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"specialization"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Specializations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.be.an('array');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/specialization",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"specialization"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specialization By ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"var expId = pm.collectionVariables.get(\"specializationId\") || pm.environment.get(\"specializationId\");",
+									"pm.expect(data.id).to.eql(expId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/specialization/{{specializationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"specialization",
+								"{{specializationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Specialization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data.name).to.eql(\"Cardiology & Vascular\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Cardiology & Vascular\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/specialization/{{specializationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"specialization",
+								"{{specializationId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. Doctor & Specialization Many-to-Many",
+			"item": [
+				{
+					"name": "Assign Specialization to Doctor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data.specializations).to.be.an('array');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor/{{doctorId}}/specialization/{{specializationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor",
+								"{{doctorId}}",
+								"specialization",
+								"{{specializationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doctor Specializations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.be.an('array');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/doctor/{{doctorId}}/specializations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"doctor",
+								"{{doctorId}}",
+								"specializations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Doctors with Specialization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.be.an('array');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/specialization/{{specializationId}}/doctors",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"specialization",
+								"{{specializationId}}",
+								"doctors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. Appointment & Practical Exercise 4 Queries",
+			"item": [
+				{
+					"name": "Save Appointment (Pending Past)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data.message).to.eql(\"Appointment is saved successfully\");",
+									"pm.collectionVariables.set(\"appointmentId\", data.appointmentId);",
+									"pm.environment.set(\"appointmentId\", data.appointmentId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointmentDate\": \"2026-09-01\",\n  \"reason\": \"Past Routine Consultation\",\n  \"status\": \"PENDING\",\n  \"patientId\": \"{{patientId}}\",\n  \"doctorId\": \"{{doctorId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/appointment/save",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"appointment",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Appointment (Pending Future)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data.message).to.eql(\"Appointment is saved successfully\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"appointmentDate\": \"2026-10-25\",\n  \"reason\": \"Future Cardiology Review\",\n  \"status\": \"PENDING\",\n  \"patientId\": \"{{patientId}}\",\n  \"doctorId\": \"{{doctorId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/appointment/save",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"appointment",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query 1: Derived Pending Doctor Appointments Ordered by Date",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.be.an('array');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/appointment/query/doctor/{{doctorId}}/pending",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"appointment",
+								"query",
+								"doctor",
+								"{{doctorId}}",
+								"pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query 2: JPQL Pending Past Due Report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.be.an('array');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/appointment/query/pending-past-due-report",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"appointment",
+								"query",
+								"pending-past-due-report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query 3: Aggregate Busiest Doctors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.be.an('array');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/appointment/query/busiest-doctors",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"appointment",
+								"query",
+								"busiest-doctors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query 4: JOIN Across 2 Relationships (Doctor Specialization)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.be.an('array');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/appointment/query/by-specialization?name=Cardiology & Vascular",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"appointment",
+								"query",
+								"by-specialization"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Cardiology & Vascular"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query 5: Pagination (Page 1 of Doctor Appointments, 10 per page)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var data = pm.response.json();",
+									"pm.expect(data).to.have.property('content');",
+									"pm.expect(data.pageable.pageSize).to.eql(10);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/appointment/query/doctor/{{doctorId}}/page?page=1&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"appointment",
+								"query",
+								"doctor",
+								"{{doctorId}}",
+								"page"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

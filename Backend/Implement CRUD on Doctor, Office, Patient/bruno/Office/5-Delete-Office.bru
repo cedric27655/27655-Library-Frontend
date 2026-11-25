@@ -1,0 +1,17 @@
+meta {
+  name: Delete Office
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/office/{{officeId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 204 No Content", function() {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

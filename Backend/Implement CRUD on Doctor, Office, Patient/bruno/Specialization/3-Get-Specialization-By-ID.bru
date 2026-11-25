@@ -1,0 +1,22 @@
+meta {
+  name: Get Specialization By ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/specialization/{{specializationId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("matches requested specialization ID", function() {
+    const data = res.getBody();
+    expect(data.id).to.equal(bru.getEnvVar("specializationId") || bru.getVar("specializationId"));
+  });
+}

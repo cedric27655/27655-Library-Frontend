@@ -1,0 +1,22 @@
+meta {
+  name: Get Doctor By ID
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/doctor/{{doctorId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("returns requested doctor", function() {
+    const data = res.getBody();
+    expect(data.id).to.equal(bru.getEnvVar("doctorId") || bru.getVar("doctorId"));
+  });
+}

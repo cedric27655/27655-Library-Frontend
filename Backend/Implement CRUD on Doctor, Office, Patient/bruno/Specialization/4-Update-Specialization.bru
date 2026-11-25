@@ -1,0 +1,32 @@
+meta {
+  name: Update Specialization
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/specialization/{{specializationId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Dermatology & Skin Surgery"
+  }
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("updated name matches", function() {
+    const data = res.getBody();
+    expect(data.name).to.equal("Dermatology & Skin Surgery");
+  });
+}

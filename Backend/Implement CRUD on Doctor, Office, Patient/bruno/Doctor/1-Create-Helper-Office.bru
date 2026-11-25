@@ -1,0 +1,35 @@
+meta {
+  name: Create Helper Office For Doctor
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/office
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Doctor Examination Room",
+    "officeNumber": 501
+  }
+}
+
+tests {
+  test("status is 201 Created", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("extract officeId", function() {
+    const data = res.getBody();
+    expect(data.id).to.be.a('string');
+    bru.setEnvVar("officeId", data.id);
+    bru.setVar("officeId", data.id);
+  });
+}

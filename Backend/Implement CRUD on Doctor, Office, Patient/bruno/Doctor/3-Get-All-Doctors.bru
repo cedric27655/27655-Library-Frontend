@@ -1,0 +1,23 @@
+meta {
+  name: Get All Doctors
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/doctor
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("returns array of doctors", function() {
+    const data = res.getBody();
+    expect(Array.isArray(data)).to.be.true;
+    expect(data.length).to.be.at.least(1);
+  });
+}

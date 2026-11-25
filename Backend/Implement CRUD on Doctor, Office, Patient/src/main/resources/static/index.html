@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kigali Clinic CRUD</title>
+  <style>
+    :root { font-family: Segoe UI, sans-serif; color: #12202b; background: #f4f7f8; }
+    body { max-width: 980px; margin: 24px auto; padding: 0 16px; }
+    h1 { margin-bottom: 8px; }
+    .tabs { display: flex; gap: 8px; margin: 16px 0; }
+    .tabs button { border: 0; background: #d9e4ea; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+    .tabs button.active { background: #0b6e4f; color: #fff; }
+    section { display: none; background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 10px #0001; }
+    section.active { display: block; }
+    form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; align-items: end; margin-bottom: 16px; }
+    label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+    input, select, button { padding: 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #e5ecef; text-align: left; padding: 8px; font-size: 14px; }
+    .msg { min-height: 20px; margin-bottom: 10px; color: #0b6e4f; }
+    .msg.error { color: #b42318; }
+    .row-actions { display: flex; gap: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Kigali Clinic</h1>
+  <p>Create, read, update, and delete offices, doctors, and patients.</p>
+  <div class="tabs">
+    <button class="active" data-tab="office">Office</button>
+    <button data-tab="doctor">Doctor</button>
+    <button data-tab="patient">Patient</button>
+  </div>
+  <p id="msg" class="msg"></p>
+
+  <section id="office" class="active">
+    <form id="office-form">
+      <input type="hidden" name="id">
+      <label>Name <input name="name" required></label>
+      <label>Office number <input name="officeNumber" type="number" required></label>
+      <button type="submit">Save office</button>
+      <button type="button" id="office-reset">Clear</button>
+    </form>
+    <table>
+      <thead><tr><th>Name</th><th>Number</th><th>Id</th><th></th></tr></thead>
+      <tbody id="office-rows"></tbody>
+    </table>
+  </section>
+
+  <section id="doctor">
+    <form id="doctor-form">
+      <input type="hidden" name="id">
+      <label>First name <input name="firstName" required></label>
+      <label>Last name <input name="lastName" required></label>
+      <label>Date of birth <input name="dateOfBirth" type="date" required></label>
+      <label>Office
+        <select name="officeId">
+          <option value="">None</option>
+        </select>
+      </label>
+      <button type="submit">Save doctor</button>
+      <button type="button" id="doctor-reset">Clear</button>
+    </form>
+    <table>
+      <thead><tr><th>Name</th><th>DOB</th><th>Office</th><th></th></tr></thead>
+      <tbody id="doctor-rows"></tbody>
+    </table>
+  </section>
+
+  <section id="patient">
+    <form id="patient-form">
+      <input type="hidden" name="id">
+      <label>First name <input name="firstName" required></label>
+      <label>Last name <input name="lastName" required></label>
+      <label>Date of birth <input name="dateOfBirth" type="date" required></label>
+      <button type="submit">Save patient</button>
+      <button type="button" id="patient-reset">Clear</button>
+    </form>
+    <table>
+      <thead><tr><th>Name</th><th>DOB</th><th>Id</th><th></th></tr></thead>
+      <tbody id="patient-rows"></tbody>
+    </table>
+  </section>
+
+  <script>
+    const msg = document.getElementById("msg");
+    const tabs = document.querySelectorAll(".tabs button");
+    const sections = document.querySelectorAll("section");
+    tabs.forEach(btn => btn.addEventListener("click", () => {
+      tabs.forEach(b => b.classList.remove("active"));
+      sections.forEach(s => s.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+    }));
+
+    function show(text, isError) {
+      msg.textContent = text;
+      msg.classList.toggle("error", !!isError);
+    }
+
+    async function api(path, options) {
+      const res = await fetch(path, Object.assign({ headers: { "Content-Type": "application/json" } }, options));
+      if (res.status === 204) return null;
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.message || res.statusText);
+      return body;
+    }
+
+    function bindForm(formId, resetId, toPayload, save, load) {
+      const form = document.getElementById(formId);
+      document.getElementById(resetId).onclick = () => form.reset();
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        const id = data.get("id");
+        try {
+          await save(id, toPayload(data));
+          form.reset();
+          show(id ? "Updated." : "Created.");
+          await load();
+        } catch (err) {
+          show(err.message, true);
+        }
+      };
+    }
+
+    async function loadOffices() {
+      const offices = await api("/api/office");
+      const rows = document.getElementById("office-rows");
+      rows.innerHTML = offices.map(o => `<tr>
+        <td>${o.name}</td><td>${o.officeNumber}</td><td>${o.id}</td>
+        <td class="row-actions">
+          <button data-edit-office='${JSON.stringify(o)}'>Edit</button>
+          <button data-del="/api/office/${o.id}">Delete</button>
+        </td></tr>`).join("");
+      const select = document.querySelector("#doctor-form select[name=officeId]");
+      const current = select.value;
+      select.innerHTML = `<option value="">None</option>` + offices.map(o =>
+        `<option value="${o.id}">${o.name} (#${o.officeNumber})</option>`).join("");
+      select.value = current;
+    }
+
+    async function loadDoctors() {
+      const doctors = await api("/api/doctor");
+      document.getElementById("doctor-rows").innerHTML = doctors.map(d => `<tr>
+        <td>${d.firstName} ${d.lastName}</td><td>${d.dateOfBirth}</td><td>${d.officeId || ""}</td>
+        <td class="row-actions">
+          <button data-edit-doctor='${JSON.stringify(d)}'>Edit</button>
+          <button data-del="/api/doctor/${d.id}">Delete</button>
+        </td></tr>`).join("");
+    }
+
+    async function loadPatients() {
+      const patients = await api("/api/patient");
+      document.getElementById("patient-rows").innerHTML = patients.map(p => `<tr>
+        <td>${p.firstName} ${p.lastName}</td><td>${p.dateOfBirth}</td><td>${p.id}</td>
+        <td class="row-actions">
+          <button data-edit-patient='${JSON.stringify(p)}'>Edit</button>
+          <button data-del="/api/patient/${p.id}">Delete</button>
+        </td></tr>`).join("");
+    }
+
+    bindForm("office-form", "office-reset", data => ({
+      name: data.get("name"), officeNumber: Number(data.get("officeNumber"))
+    }), (id, payload) => id ? api("/api/office/" + id, { method: "PUT", body: JSON.stringify(payload) })
+      : api("/api/office", { method: "POST", body: JSON.stringify(payload) }), loadOffices);
+
+    bindForm("doctor-form", "doctor-reset", data => ({
+      firstName: data.get("firstName"), lastName: data.get("lastName"),
+      dateOfBirth: data.get("dateOfBirth"), officeId: data.get("officeId") || null
+    }), (id, payload) => id ? api("/api/doctor/" + id, { method: "PUT", body: JSON.stringify(payload) })
+      : api("/api/doctor", { method: "POST", body: JSON.stringify(payload) }), loadDoctors);
+
+    bindForm("patient-form", "patient-reset", data => ({
+      firstName: data.get("firstName"), lastName: data.get("lastName"), dateOfBirth: data.get("dateOfBirth")
+    }), (id, payload) => id ? api("/api/patient/" + id, { method: "PUT", body: JSON.stringify(payload) })
+      : api("/api/patient", { method: "POST", body: JSON.stringify(payload) }), loadPatients);
+
+    document.body.addEventListener("click", async (e) => {
+      const del = e.target.dataset.del;
+      if (del) {
+        try {
+          await api(del, { method: "DELETE" });
+          show("Deleted.");
+          await Promise.all([loadOffices(), loadDoctors(), loadPatients()]);
+        } catch (err) { show(err.message, true); }
+      }
+      if (e.target.dataset.editOffice) {
+        const o = JSON.parse(e.target.dataset.editOffice);
+        const f = document.getElementById("office-form");
+        f.id.value = o.id; f.name.value = o.name; f.officeNumber.value = o.officeNumber;
+      }
+      if (e.target.dataset.editDoctor) {
+        const d = JSON.parse(e.target.dataset.editDoctor);
+        const f = document.getElementById("doctor-form");
+        f.id.value = d.id; f.firstName.value = d.firstName; f.lastName.value = d.lastName;
+        f.dateOfBirth.value = d.dateOfBirth; f.officeId.value = d.officeId || "";
+      }
+      if (e.target.dataset.editPatient) {
+        const p = JSON.parse(e.target.dataset.editPatient);
+        const f = document.getElementById("patient-form");
+        f.id.value = p.id; f.firstName.value = p.firstName; f.lastName.value = p.lastName;
+        f.dateOfBirth.value = p.dateOfBirth;
+      }
+    });
+
+    Promise.all([loadOffices(), loadDoctors(), loadPatients()]).catch(err => show(err.message, true));
+  </script>
+</body>
+</html>

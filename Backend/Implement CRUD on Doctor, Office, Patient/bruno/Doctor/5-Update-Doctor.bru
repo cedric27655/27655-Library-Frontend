@@ -1,0 +1,36 @@
+meta {
+  name: Update Doctor
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/doctor/{{doctorId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "firstName": "Dr. Emile",
+    "lastName": "Gasana (Chief)",
+    "dateOfBirth": "1983-11-25",
+    "officeId": "{{officeId}}"
+  }
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("doctor details updated", function() {
+    const data = res.getBody();
+    expect(data.firstName).to.equal("Dr. Emile");
+    expect(data.lastName).to.equal("Gasana (Chief)");
+  });
+}

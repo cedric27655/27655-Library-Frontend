@@ -1,0 +1,29 @@
+meta {
+  name: Query 5 - Doctor Appointments Pagination (Page 1)
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/appointment/query/doctor/{{doctorId}}/page?page=1&size=10
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 1
+  size: 10
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("returns paginated appointments structure", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("content");
+    expect(data).to.have.property("totalElements");
+    expect(data.pageable.pageSize).to.equal(10);
+  });
+}

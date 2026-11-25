@@ -1,0 +1,39 @@
+meta {
+  name: Create Doctor
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/doctor
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "firstName": "Emile",
+    "lastName": "Gasana",
+    "dateOfBirth": "1983-11-25",
+    "officeId": "{{officeId}}"
+  }
+}
+
+tests {
+  test("status is 201 Created", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("doctor created and office linked", function() {
+    const data = res.getBody();
+    expect(data.id).to.be.a('string');
+    expect(data.firstName).to.equal("Emile");
+    expect(data.officeId).to.equal(bru.getEnvVar("officeId") || bru.getVar("officeId"));
+    bru.setEnvVar("doctorId", data.id);
+    bru.setVar("doctorId", data.id);
+  });
+}

@@ -1,0 +1,437 @@
+{
+	"info": {
+		"_postman_id": "c8f2b740-d7a8-4fa3-9ce1-6c2e7b89f5a0",
+		"name": "Kigali Clinic: Quiz 2 Collection",
+		"description": "Comprehensive Postman test collection for Quiz 2 'Completing the Backend', covering Step 0 seed data, Part A (A1-A4), Part B (B1-B3), Part C (C1-C4), Part D (D1-D4), and Bonus requirements.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{"key": "baseUrl", "value": "http://localhost:8085", "type": "string"},
+		{"key": "office101_id", "value": "", "type": "string"},
+		{"key": "office102_id", "value": "", "type": "string"},
+		{"key": "office103_id", "value": "", "type": "string"},
+		{"key": "office104_id", "value": "", "type": "string"},
+		{"key": "spec1_id", "value": "", "type": "string"},
+		{"key": "spec2_id", "value": "", "type": "string"},
+		{"key": "doctor1_id", "value": "", "type": "string"},
+		{"key": "doctor2_id", "value": "", "type": "string"},
+		{"key": "doctor3_id", "value": "", "type": "string"},
+		{"key": "patient1_id", "value": "", "type": "string"},
+		{"key": "patient1_ssn", "value": "RW-1001", "type": "string"},
+		{"key": "appointment_scheduled_id", "value": "", "type": "string"},
+		{"key": "appointment_completed_id", "value": "", "type": "string"},
+		{"key": "prescription1_id", "value": "", "type": "string"}
+	],
+	"item": [
+		{
+			"name": "Step 0 - Seed Data",
+			"item": [
+				{
+					"name": "Create Office 101",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('office101_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"name\": \"Room 101\",\n  \"officeNumber\": 101\n}"},
+						"url": "{{baseUrl}}/api/offices"
+					}
+				},
+				{
+					"name": "Create Office 102",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('office102_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"name\": \"Room 102\",\n  \"officeNumber\": 102\n}"},
+						"url": "{{baseUrl}}/api/offices"
+					}
+				},
+				{
+					"name": "Create Office 103",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('office103_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"name\": \"Room 103\",\n  \"officeNumber\": 103\n}"},
+						"url": "{{baseUrl}}/api/offices"
+					}
+				},
+				{
+					"name": "Create Office 104 (Free)",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('office104_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"name\": \"Room 104\",\n  \"officeNumber\": 104\n}"},
+						"url": "{{baseUrl}}/api/offices"
+					}
+				},
+				{
+					"name": "Create Specialization Cardiology",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('spec1_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"name\": \"Cardiology\"\n}"},
+						"url": "{{baseUrl}}/api/specializations"
+					}
+				},
+				{
+					"name": "Create Specialization Pediatrics",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('spec2_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"name\": \"Pediatrics\"\n}"},
+						"url": "{{baseUrl}}/api/specializations"
+					}
+				},
+				{
+					"name": "Create Doctor 1 (Dr. Eric Mugisha - with Office 101)",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('doctor1_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"firstName\": \"Eric\",\n  \"lastName\": \"Mugisha\",\n  \"dateOfBirth\": \"1980-05-14\",\n  \"officeId\": \"{{office101_id}}\"\n}"},
+						"url": "{{baseUrl}}/api/doctors"
+					}
+				},
+				{
+					"name": "Create Doctor 2 (Dr. Aline Mukamana - with Office 102)",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('doctor2_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"firstName\": \"Aline\",\n  \"lastName\": \"Mukamana\",\n  \"dateOfBirth\": \"1985-08-20\",\n  \"officeId\": \"{{office102_id}}\"\n}"},
+						"url": "{{baseUrl}}/api/doctors"
+					}
+				},
+				{
+					"name": "Create Doctor 3 (Dr. Jean Habimana - with Office 103)",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('doctor3_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"firstName\": \"Jean\",\n  \"lastName\": \"Habimana\",\n  \"dateOfBirth\": \"1975-01-10\",\n  \"officeId\": \"{{office103_id}}\"\n}"},
+						"url": "{{baseUrl}}/api/doctors"
+					}
+				},
+				{
+					"name": "Create Patient 1 (Alice Uwase)",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (data && data.id) { pm.collectionVariables.set('patient1_id', data.id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"firstName\": \"Alice\",\n  \"lastName\": \"Uwase\",\n  \"dateOfBirth\": \"1995-08-20\",\n  \"ssNumber\": \"RW-1001\"\n}"},
+						"url": "{{baseUrl}}/api/patients"
+					}
+				},
+				{
+					"name": "Seed Appointment 1 (SCHEDULED for Doctor 1)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"appointmentDate\": \"2026-10-20\",\n  \"reason\": \"Cardio Consultation\"\n}"},
+						"url": "{{baseUrl}}/api/appointments/save?patientId={{patient1_id}}&doctorId={{doctor1_id}}"
+					}
+				},
+				{
+					"name": "Seed Appointment 2 (Capture Scheduled ID)",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (Array.isArray(data) && data.length > 0) { pm.collectionVariables.set('appointment_scheduled_id', data[0].id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/appointments"
+					}
+				},
+				{
+					"name": "Promote Appointment to COMPLETED (for Prescription Testing)",
+					"event": [
+						{"listen": "test", "script": {"exec": ["pm.collectionVariables.set('appointment_completed_id', pm.collectionVariables.get('appointment_scheduled_id'));"], "type": "text/javascript"}}
+					],
+					"request": {
+						"method": "PATCH",
+						"url": "{{baseUrl}}/api/appointments/{{appointment_scheduled_id}}/status?status=CONFIRMED"
+					}
+				},
+				{
+					"name": "Finalize Status to COMPLETED",
+					"request": {
+						"method": "PATCH",
+						"url": "{{baseUrl}}/api/appointments/{{appointment_completed_id}}/status?status=COMPLETED"
+					}
+				},
+				{
+					"name": "Create Fresh SCHEDULED Appointment (for Flow Testing)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"appointmentDate\": \"2026-10-22\",\n  \"reason\": \"Routine Followup\"\n}"},
+						"url": "{{baseUrl}}/api/appointments/save?patientId={{patient1_id}}&doctorId={{doctor2_id}}"
+					}
+				},
+				{
+					"name": "Capture Fresh Scheduled Appointment ID",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (Array.isArray(data)) { for(var i=0; i<data.length; i++) { if(data[i].status === 'SCHEDULED') { pm.collectionVariables.set('appointment_scheduled_id', data[i].id); break; } } }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/appointments"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part A - Doctors and Offices",
+			"item": [
+				{
+					"name": "A1 - Add Specialization to Doctor (Success 200)",
+					"request": {
+						"method": "PUT",
+						"url": "{{baseUrl}}/api/doctors/{{doctor1_id}}/specializations/{{spec1_id}}"
+					}
+				},
+				{
+					"name": "A1 - Add Specialization to Doctor (409 Conflict)",
+					"request": {
+						"method": "PUT",
+						"url": "{{baseUrl}}/api/doctors/{{doctor1_id}}/specializations/{{spec1_id}}"
+					}
+				},
+				{
+					"name": "A2 - Remove Specialization from Doctor (Success 200)",
+					"request": {
+						"method": "DELETE",
+						"url": "{{baseUrl}}/api/doctors/{{doctor1_id}}/specializations/{{spec1_id}}"
+					}
+				},
+				{
+					"name": "A2 - Remove Specialization from Doctor (409 Conflict)",
+					"request": {
+						"method": "DELETE",
+						"url": "{{baseUrl}}/api/doctors/{{doctor1_id}}/specializations/{{spec1_id}}"
+					}
+				},
+				{
+					"name": "A3 - Free Offices (Returns Office 104)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/offices/free"
+					}
+				},
+				{
+					"name": "A4 - Move Doctor to Office 104 (Success 200)",
+					"request": {
+						"method": "PATCH",
+						"url": {
+							"raw": "{{baseUrl}}/api/doctors/{{doctor1_id}}/office?officeNumber=104",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "doctors", "{{doctor1_id}}", "office"],
+							"query": [{"key": "officeNumber", "value": "104"}]
+						}
+					}
+				},
+				{
+					"name": "A4 - Move Doctor to Occupied Office (409 Conflict)",
+					"request": {
+						"method": "PATCH",
+						"url": {
+							"raw": "{{baseUrl}}/api/doctors/{{doctor1_id}}/office?officeNumber=102",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "doctors", "{{doctor1_id}}", "office"],
+							"query": [{"key": "officeNumber", "value": "102"}]
+						}
+					}
+				},
+				{
+					"name": "A4 - Move Doctor to Nonexistent Office (404)",
+					"request": {
+						"method": "PATCH",
+						"url": {
+							"raw": "{{baseUrl}}/api/doctors/{{doctor1_id}}/office?officeNumber=999",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "doctors", "{{doctor1_id}}", "office"],
+							"query": [{"key": "officeNumber", "value": "999"}]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Part B - Appointment Rules",
+			"item": [
+				{
+					"name": "B1 - Safe Booking (Reject Past Date 400)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"appointmentDate\": \"2020-01-01\",\n  \"reason\": \"Checkup\",\n  \"status\": \"COMPLETED\"\n}"},
+						"url": "{{baseUrl}}/api/appointments/save?patientId={{patient1_id}}&doctorId={{doctor1_id}}"
+					}
+				},
+				{
+					"name": "B1 - Safe Booking (Success Forces SCHEDULED 201)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"appointmentDate\": \"2026-10-28\",\n  \"reason\": \"Routine Consultation\",\n  \"status\": \"COMPLETED\"\n}"},
+						"url": "{{baseUrl}}/api/appointments/save?patientId={{patient1_id}}&doctorId={{doctor3_id}}"
+					}
+				},
+				{
+					"name": "B2 - Status Flow (Valid Move SCHEDULED to CONFIRMED 200)",
+					"request": {
+						"method": "PATCH",
+						"url": "{{baseUrl}}/api/appointments/{{appointment_scheduled_id}}/status?status=CONFIRMED"
+					}
+				},
+				{
+					"name": "B2 - Status Flow (Invalid Move from COMPLETED 400)",
+					"request": {
+						"method": "PATCH",
+						"url": "{{baseUrl}}/api/appointments/{{appointment_completed_id}}/status?status=SCHEDULED"
+					}
+				},
+				{
+					"name": "B3 - Reschedule Appointment (Past Date 400)",
+					"request": {
+						"method": "PATCH",
+						"url": "{{baseUrl}}/api/appointments/{{appointment_scheduled_id}}/reschedule?newDate=2020-01-01"
+					}
+				},
+				{
+					"name": "B3 - Reschedule Appointment (Completed Appointment 400)",
+					"request": {
+						"method": "PATCH",
+						"url": "{{baseUrl}}/api/appointments/{{appointment_completed_id}}/reschedule?newDate=2026-10-30"
+					}
+				},
+				{
+					"name": "B3 - Reschedule Appointment (Success 200)",
+					"request": {
+						"method": "PATCH",
+						"url": "{{baseUrl}}/api/appointments/{{appointment_scheduled_id}}/reschedule?newDate=2026-10-30"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part C - Prescriptions",
+			"item": [
+				{
+					"name": "C1 - Write Prescription for Non-COMPLETED (400 Bad Request)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"1 tablet, 3 times a day\",\n  \"durationDays\": 7\n}"},
+						"url": "{{baseUrl}}/api/prescriptions/save?appointmentId={{appointment_scheduled_id}}"
+					}
+				},
+				{
+					"name": "C1 - Write Prescription for COMPLETED (201 Created)",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"medicineName\": \"Amoxicillin\",\n  \"dosage\": \"1 tablet, 3 times a day\",\n  \"durationDays\": 7\n}"},
+						"url": "{{baseUrl}}/api/prescriptions/save?appointmentId={{appointment_completed_id}}"
+					}
+				},
+				{
+					"name": "Capture Generated Prescription ID",
+					"event": [{"listen": "test", "script": {"exec": ["var data = pm.response.json(); if (Array.isArray(data) && data.length > 0) { pm.collectionVariables.set('prescription1_id', data[0].id); }"], "type": "text/javascript"}}],
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/prescriptions/appointment/{{appointment_completed_id}}"
+					}
+				},
+				{
+					"name": "C2 - Prescriptions of Appointment (Success 200)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/prescriptions/appointment/{{appointment_completed_id}}"
+					}
+				},
+				{
+					"name": "C3 - Prescription History of Patient (Success 200)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/prescriptions/patient/{{patient1_ssn}}"
+					}
+				},
+				{
+					"name": "C4 - Update Prescription (Success 200)",
+					"request": {
+						"method": "PUT",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {"mode": "raw", "raw": "{\n  \"medicineName\": \"Amoxicillin 500mg\",\n  \"dosage\": \"1 tablet twice a day\",\n  \"durationDays\": 5\n}"},
+						"url": "{{baseUrl}}/api/prescriptions/update/{{prescription1_id}}"
+					}
+				},
+				{
+					"name": "C4 - Protect Appointment Deletion (409 Conflict)",
+					"request": {
+						"method": "DELETE",
+						"url": "{{baseUrl}}/api/appointments/{{appointment_completed_id}}"
+					}
+				},
+				{
+					"name": "C4 - Delete Prescription (Success 200)",
+					"request": {
+						"method": "DELETE",
+						"url": "{{baseUrl}}/api/prescriptions/delete/{{prescription1_id}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part D - Agenda and Reports",
+			"item": [
+				{
+					"name": "D1 - Doctor Agenda for a Day (Success 200)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/doctors/{{doctor1_id}}/agenda?date=2026-10-20"
+					}
+				},
+				{
+					"name": "D2 - Upcoming Appointments of Patient (Success 200)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/patients/{{patient1_ssn}}/upcoming"
+					}
+				},
+				{
+					"name": "D3 - Search Doctors by Name (Success 200)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/doctors/search?name=Mug"
+					}
+				},
+				{
+					"name": "D4 - Clinic Dashboard Summary (Success 200)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/dashboard/summary"
+					}
+				}
+			]
+		},
+		{
+			"name": "Part E - Bonus Requirements",
+			"item": [
+				{
+					"name": "Bonus 1 - Top Prescribed Medicines (Success 200)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/prescriptions/stats/top-medicines"
+					}
+				},
+				{
+					"name": "Bonus 2 - Doctor Workload (Success 200)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/doctors/workload?start=2026-10-01&end=2026-10-31"
+					}
+				}
+			]
+		}
+	]
+}

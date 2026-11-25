@@ -1,0 +1,27 @@
+meta {
+  name: Query 2 - Pending Appointments Past Due Report
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/appointment/query/pending-past-due-report
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200 OK", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("returns report with patient, doctor, and date", function() {
+    const data = res.getBody();
+    expect(Array.isArray(data)).to.be.true;
+    if (data.length > 0) {
+      expect(data[0]).to.have.property("patientName");
+      expect(data[0]).to.have.property("doctorName");
+      expect(data[0]).to.have.property("appointmentDate");
+    }
+  });
+}

@@ -1,0 +1,17 @@
+meta {
+  name: Verify Office Deleted
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/office/{{officeId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 404 Not Found", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+}

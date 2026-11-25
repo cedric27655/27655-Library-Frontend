@@ -1,0 +1,30 @@
+meta {
+  name: Non-Existent Office ID
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/doctor
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "firstName": "Eric",
+    "lastName": "Manzi",
+    "dateOfBirth": "1985-05-10",
+    "officeId": "00000000-0000-0000-0000-000000000000"
+  }
+}
+
+tests {
+  test("status is 404 Not Found", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+}
